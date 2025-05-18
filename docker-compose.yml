@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  ansible-control-node:
+    image: alpine:3.18
+    container_name: ansible-control-node
+    hostname: ansible-control-node
+    restart: unless-stopped
+    command: tail -f /dev/null  # Keep container running
+    volumes:
+      - ./ansible/:/etc/ansible/
+      - ~/.ssh/:/root/.ssh/
+    networks:
+      - ansible-net
+    environment:
+      - ANSIBLE_HOST_KEY_CHECKING=False
+    build:
+      context: .
+      dockerfile: Dockerfile.ansible
+
+networks:
+  ansible-net:
+    driver: bridge
